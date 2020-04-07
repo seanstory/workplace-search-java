@@ -9,7 +9,7 @@ class ClientTest extends Specification {
     def "test client access"(){
         setup:
         def accessToken = "abcdefg"
-        def client = new Client()
+        def client = new Client(accessToken)
 
         when:
         def token = client.accessToken
