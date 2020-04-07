@@ -5,7 +5,6 @@ import java.net.URLEncoder
 import javax.ws.rs.client.ClientBuilder
 import javax.ws.rs.client.Entity
 import javax.ws.rs.client.WebTarget
-import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
@@ -15,30 +14,34 @@ val DEFAULT_ENDPOINT = "http://localhost:3002/api/ws/v1/"
 val DEFAULT_TIMEOUT = 15
 data class Client @JvmOverloads constructor(var accessToken: String,
                    var endpoint: String = DEFAULT_ENDPOINT,
-                   var userAgent: String? = null,
-                   var openTimeout: Int = DEFAULT_TIMEOUT,
-                   var proxy: String? = null,
-                   var overallTimeout : Float = DEFAULT_TIMEOUT.toFloat())
-    : Permissions, ContentSourceDocuments {
+                   var userAgent: String? = null
+                   //var openTimeout: Int = DEFAULT_TIMEOUT,
+                   //var proxy: String? = null,
+                   //var overallTimeout : Float = DEFAULT_TIMEOUT.toFloat()
+                )
+    : BaseClient, Permissions, ContentSourceDocuments {
     
     val restClient = ClientBuilder.newClient()
     val webTarget: WebTarget = restClient.target(endpoint)
     
 
-    fun get(path: String, params: Map<String, String>) = request("GET", path, params)
-    fun post(path: String, params: Map<String, String>) = request("POST", path, params)
-    fun put(path: String, params: Map<String, String>) = request("PUT", path, params)
-    fun delete(path: String, params: Map<String, String>) = request("DELETE", path, params)
+    override fun <T> get(path: String, params: Map<String, Any>, outputClass: Class<T>) = request("GET", path, params, outputClass)
+    override fun <T> post(path: String, params: Map<String, Any>, outputClass: Class<T>) = request("POST", path, params, outputClass)
+    override fun <T> post(path: String, params: List<Any>, outputClass: Class<T>) = request("POST", path, params, outputClass)
+    override fun <T> put(path: String, params: Map<String, Any>, outputClass: Class<T>) = request("PUT", path, params, outputClass)
+    override fun <T> put(path: String, params: List<Any>, outputClass: Class<T>) = request("PUT", path, params, outputClass)
+    override fun <T> delete(path: String, params: Map<String, Any>, outputClass: Class<T>) = request("DELETE", path, params, outputClass)
     
-    
-    private fun request(method: String, path: String, params: Map<String,String>) : Map<String, Any>? {
+    private fun <T> request(method: String, path: String, params: Any, outputClass: Class<T>) : T {
         // TODO, figure out timeouts
         // TODO, proxy?
         // TODO, https?
         var target = webTarget.path(path)
         
         var builder = if (method in listOf("GET", "DELETE")){
-            params.forEach { (key, value) -> target = target.queryParam(URLEncoder.encode(key, "UTF-8"), URLEncoder.encode(value, "UTF-8"))}
+            when (params) {
+                is Map<*, *> -> params.forEach { (key, value) -> target = target.queryParam(URLEncoder.encode(key.toString(), "UTF-8"), URLEncoder.encode(value.toString(), "UTF-8"))}
+            }
             target.request()
         } else {
             target.request()
@@ -68,10 +71,7 @@ data class Client @JvmOverloads constructor(var accessToken: String,
         
         val response = handleErrors(invocation.invoke())
         
-        val klass = object : GenericType<HashMap<String, Any>>() {
-        
-        }
-        return response.readEntity(klass)
+        return response.readEntity(outputClass)
     }
 
     
