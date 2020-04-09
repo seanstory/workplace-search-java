@@ -1,5 +1,7 @@
 package com.sstory.workplace.search.client
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.lang.RuntimeException
 import java.net.URLEncoder
 import javax.ws.rs.client.ClientBuilder
@@ -8,10 +10,10 @@ import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
-val CLIENT_VERSION = "0.0.1"
-val CLIENT_NAME = "elastic-workplace-search-ruby"
-val DEFAULT_ENDPOINT = "http://localhost:3002/api/ws/v1/"
-val DEFAULT_TIMEOUT = 15
+const val CLIENT_VERSION = "0.0.1"
+const val CLIENT_NAME = "elastic-workplace-search-ruby"
+const val DEFAULT_ENDPOINT = "http://localhost:3002/api/ws/v1/"
+const val DEFAULT_TIMEOUT = 15
 data class Client @JvmOverloads constructor(var accessToken: String,
                    var endpoint: String = DEFAULT_ENDPOINT,
                    var userAgent: String? = null
@@ -23,6 +25,7 @@ data class Client @JvmOverloads constructor(var accessToken: String,
     
     val restClient = ClientBuilder.newClient()
     val webTarget: WebTarget = restClient.target(endpoint)
+    val log: Logger = LoggerFactory.getLogger(this.javaClass)
     
 
     override fun <T> get(path: String, params: Map<String, Any>, outputClass: Class<T>) = request("GET", path, params, outputClass)
@@ -36,6 +39,8 @@ data class Client @JvmOverloads constructor(var accessToken: String,
         // TODO, figure out timeouts
         // TODO, proxy?
         // TODO, https?
+        // TODO, add logging
+        log.debug("Attempting {} {} with params: {}", method, path, params)
         var target = webTarget.path(path)
         
         var builder = if (method in listOf("GET", "DELETE")){
@@ -69,18 +74,19 @@ data class Client @JvmOverloads constructor(var accessToken: String,
             }
         }
         
-        val response = handleErrors(invocation.invoke())
+        val response = handleResponse(invocation.invoke())
         
         return response.readEntity(outputClass)
     }
 
-    
-    class InvalidCredentialsException: RuntimeException()
-    class NonExistentRecordException: RuntimeException()
-    class BadRequestException(message: String): RuntimeException(message)
-    class ForbiddenException: RuntimeException()
-    class UnexpectedHTTPException(message: String): RuntimeException(message)
-    private fun handleErrors(response: Response) : Response {
+    open class WorkplaceSearchClientException(message: String?): RuntimeException(message)
+    class InvalidCredentialsException: WorkplaceSearchClientException(null)
+    class NonExistentRecordException:WorkplaceSearchClientException(null)
+    class BadRequestException(message: String): WorkplaceSearchClientException(message)
+    class ForbiddenException: WorkplaceSearchClientException(null)
+    class UnexpectedHTTPException(message: String): WorkplaceSearchClientException(message)
+    private fun handleResponse(response: Response) : Response {
+        log.debug("Got response with code: {}", response.status)
         when (response.statusInfo.toEnum()) {
             Response.Status.OK -> return response
             Response.Status.UNAUTHORIZED -> throw InvalidCredentialsException()

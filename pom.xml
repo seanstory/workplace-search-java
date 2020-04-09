@@ -161,6 +161,8 @@
                 </executions>
                 <configuration>
 					<proc>none</proc>
+                    <source>1.8</source>
+                    <target>1.8</target>
 				</configuration>
                 <dependencies>
                     <dependency>
