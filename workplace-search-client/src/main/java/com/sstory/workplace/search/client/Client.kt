@@ -40,7 +40,8 @@ data class Client @JvmOverloads constructor(var accessToken: String,
         // TODO, proxy?
         // TODO, https?
         // TODO, add logging
-        log.debug("Attempting {} {} with params: {}", method, path, params)
+        log.debug("Attempting {} {}", method, path)
+        log.trace("(with params: {})", params)
         var target = webTarget.path(path)
         
         var builder = if (method in listOf("GET", "DELETE")){
