@@ -1,5 +1,6 @@
 # Workplace Search - Java APIs
 ![](https://travis-ci.org/seanstory/workplace-search-java.svg)
+
 A JVM client and SDK for Elastic Workplace Search
 
 ### Building
