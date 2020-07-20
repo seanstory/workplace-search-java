@@ -160,6 +160,9 @@
                         <goals>
                             <goal>compile</goal>
                         </goals>
+                        <configuration>
+                            <compilerId>groovy-eclipse-compiler</compilerId>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>java-groovy-testCompile</id>
