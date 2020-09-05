@@ -4,6 +4,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.lang.RuntimeException
 import java.net.URLEncoder
+import javax.net.ssl.SSLContext
 import javax.ws.rs.client.ClientBuilder
 import javax.ws.rs.client.Entity
 import javax.ws.rs.client.WebTarget
@@ -23,7 +24,7 @@ data class Client @JvmOverloads constructor(var accessToken: String,
                 )
     : BaseClient, Permissions, ContentSourceDocuments {
     
-    val restClient = ClientBuilder.newClient()
+    val restClient = ClientBuilder.newBuilder().sslContext(SSLContext.getDefault()).build()
     val webTarget: WebTarget = restClient.target(endpoint)
     val log: Logger = LoggerFactory.getLogger(this.javaClass)
     
