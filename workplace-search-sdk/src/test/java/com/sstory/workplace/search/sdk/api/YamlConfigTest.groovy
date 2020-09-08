@@ -33,11 +33,13 @@ class YamlConfigTest extends Specification {
         }
 
         where:
-        path | expectedException | expectedErrMsg | expectedExceptionClass | accessToken | key | endpoint
-        "src/test/resources/one.yml" | _ | _ | _ | "3a423c597442eddb09baad64793ff342fc0aa6da357f5227888d44b3386cf722" | "5e87603bf74c32fe5fa37d86" | "http://myhost:3003/api/ws/v1/"
-        "src/test/resources/two.yml" | true | "must be configured" | _ | _ | _ | _
-        "src/test/resources/three.txt" | true | "must be a YAML file" | _ | _ | _ | _
-        "src/test/resources/four.yml" | true | null | FileNotFoundException | _ | _ | _
-        "src/test/resources/five.yml" | _ | _ | _ | "3a423c597442eddb09baad64793ff342fc0aa6da357f5227888d44b3386cf722" | "5e87603bf74c32fe5fa37d86" | "http://localhost:3002/api/ws/v1/"
+        path | expectedException | expectedErrMsg | expectedExceptionClass | accessToken | key | endpoint | security
+        "src/test/resources/one.yml" | _ | _ | _ | "3a423c597442eddb09baad64793ff342fc0aa6da357f5227888d44b3386cf722" | "5e87603bf74c32fe5fa37d86" | "http://myhost:3003/api/ws/v1/" | 'secure'
+        "src/test/resources/two.yml" | true | "must be configured" | _ | _ | _ | _ | _
+        "src/test/resources/three.txt" | true | "must be a YAML file" | _ | _ | _ | _ | _
+        "src/test/resources/four.yml" | true | null | FileNotFoundException | _ | _ | _ | _
+        "src/test/resources/five.yml" | _ | _ | _ | "3a423c597442eddb09baad64793ff342fc0aa6da357f5227888d44b3386cf722" | "5e87603bf74c32fe5fa37d86" | "http://localhost:3002/api/ws/v1/" | 'secure'
+        "src/test/resources/six.yml" | true | "must be one of: [secure, insecure]" | _ | _ | _ | _ | _
+        "src/test/resources/seven.yml" | _ | _ | _ | "3a423c597442eddb09baad64793ff342fc0aa6da357f5227888d44b3386cf722" | "5e87603bf74c32fe5fa37d86" | "http://myhost:3003/api/ws/v1/" | 'insecure'
     }
 }

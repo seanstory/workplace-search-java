@@ -1,10 +1,13 @@
 package com.sstory.workplace.search.client
 
+import com.sstory.workplace.search.client.ssl.NullHostnameVerifier
+import com.sstory.workplace.search.client.ssl.NullX509TrustManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.lang.RuntimeException
+import java.lang.IllegalArgumentException
 import java.net.URLEncoder
 import javax.net.ssl.SSLContext
+import javax.ws.rs.client.Client
 import javax.ws.rs.client.ClientBuilder
 import javax.ws.rs.client.Entity
 import javax.ws.rs.client.WebTarget
@@ -12,11 +15,16 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 const val CLIENT_VERSION = "0.0.1"
-const val CLIENT_NAME = "elastic-workplace-search-ruby"
+const val CLIENT_NAME = "elastic-workplace-search-java"
 const val DEFAULT_ENDPOINT = "http://localhost:3002/api/ws/v1/"
+const val SECURE = "secure"
+const val INSECURE = "insecure"
+const val DEFAULT_SECURITY = SECURE
+val SECURITY_OPTIONS = listOf(DEFAULT_SECURITY, INSECURE)
 const val DEFAULT_TIMEOUT = 15
 data class Client @JvmOverloads constructor(var accessToken: String,
                    var endpoint: String = DEFAULT_ENDPOINT,
+                   var security: String = DEFAULT_SECURITY,
                    var userAgent: String? = null
                    //var openTimeout: Int = DEFAULT_TIMEOUT,
                    //var proxy: String? = null,
@@ -24,7 +32,7 @@ data class Client @JvmOverloads constructor(var accessToken: String,
                 )
     : BaseClient, Permissions, ContentSourceDocuments {
     
-    val restClient = ClientBuilder.newBuilder().sslContext(SSLContext.getDefault()).build()
+    val restClient : Client = buildClient()
     val webTarget: WebTarget = restClient.target(endpoint)
     val log: Logger = LoggerFactory.getLogger(this.javaClass)
     
@@ -35,7 +43,31 @@ data class Client @JvmOverloads constructor(var accessToken: String,
     override fun <T> put(path: String, params: Map<String, Any>, outputClass: Class<T>) = request("PUT", path, params, outputClass)
     override fun <T> put(path: String, params: List<Any>, outputClass: Class<T>) = request("PUT", path, params, outputClass)
     override fun <T> delete(path: String, params: Map<String, Any>, outputClass: Class<T>) = request("DELETE", path, params, outputClass)
-    
+
+    private fun buildClient() : Client {
+        return if (this.security == SECURE) {
+            buildSecureClient()
+        } else if (this.security == INSECURE) {
+            buildInsecureClient()
+        } else {
+            throw IllegalArgumentException("Security options are: $SECURITY_OPTIONS")
+        }
+    }
+
+    private fun buildSecureClient() : Client {
+        return ClientBuilder.newBuilder().sslContext(SSLContext.getDefault()).build() // TODO, make this capable of taking a custom truststore
+    }
+
+    private fun buildInsecureClient() : Client {
+        val sslContext = SSLContext.getInstance("TLSv1.2")
+        val trustManagerArray = arrayOf(NullX509TrustManager())
+        sslContext.init(null, trustManagerArray, null)
+        return ClientBuilder.newBuilder()
+                .hostnameVerifier(NullHostnameVerifier())
+                .sslContext(sslContext)
+                .build()
+    }
+
     private fun <T> request(method: String, path: String, params: Any, outputClass: Class<T>) : T {
         // TODO, figure out timeouts
         // TODO, proxy?

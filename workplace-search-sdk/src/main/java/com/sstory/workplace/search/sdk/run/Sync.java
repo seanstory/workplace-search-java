@@ -31,7 +31,7 @@ public class Sync {
             System.exit(1);
             return; //because the compiler doesn't realize that the System.exit call is terminating.
         }
-        Client client = new Client(yamlConfig.accessToken, yamlConfig.endpoint);
+        Client client = new Client(yamlConfig.accessToken, yamlConfig.endpoint, yamlConfig.security);
         Source source = null;//TODO, dependency inject? Not sure I like this. Maybe from a resource file?
         try {
             SourcesUtils parser = new SourcesUtils();

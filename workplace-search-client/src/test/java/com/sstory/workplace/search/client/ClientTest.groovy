@@ -1,5 +1,6 @@
 package com.sstory.workplace.search.client
 
+import com.sstory.workplace.search.client.ssl.NullHostnameVerifier
 import spock.lang.Ignore
 import spock.lang.Specification
 
@@ -14,11 +15,32 @@ class ClientTest extends Specification {
         when:
         def token = client.accessToken
         def endpoint = client.endpoint
+        def restClient = client.restClient
 
 
         then:
         token == "abcdefg"
         endpoint == ClientKt.DEFAULT_ENDPOINT
+        restClient.hostnameVerifier == null
+    }
+
+    def "test insecure client"(){
+        setup:
+        def accessToken = "abcdefg"
+        def client = new Client(accessToken, ClientKt.DEFAULT_ENDPOINT, 'insecure')
+
+        when:
+        def restClient = client.restClient
+
+
+        then:
+        restClient.hostnameVerifier instanceof NullHostnameVerifier
+
+        when:
+        new Client(accessToken, ClientKt.DEFAULT_ENDPOINT, 'bad option')
+
+        then:
+        thrown(IllegalArgumentException)
     }
 
     @Ignore

@@ -1,5 +1,6 @@
 package com.sstory.workplace.search.sdk.api;
 
+import com.sstory.workplace.search.client.Client;
 import com.sstory.workplace.search.client.ClientKt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +21,11 @@ public class YamlConfig {
     public static final String ACCESS_TOKEN_CONFIG_KEY = "access_token";
     public static final String CONTENT_SOURCE_KEY_CONFIG_KEY = "content_source_key";
     public static final String ENDPOINT_CONFIG_KEY = "endpoint";
+    public static final String SECURITY_CONFIG_KEY = "security";
     public final String accessToken;
     public final String contentSourceKey;
     public final String endpoint;
+    public final String security;
     private final Map<String, Object> configMap;
 
     public YamlConfig(String yamlPath) throws FileNotFoundException {
@@ -46,6 +49,10 @@ public class YamlConfig {
         this.endpoint = config.containsKey(ENDPOINT_CONFIG_KEY) ? (String) config.get(ENDPOINT_CONFIG_KEY) : ClientKt.DEFAULT_ENDPOINT;
         if(this.accessToken == null || this.contentSourceKey == null){
             throw new ConfigurationException("Both "+ACCESS_TOKEN_CONFIG_KEY+" and "+CONTENT_SOURCE_KEY_CONFIG_KEY+" must be configured in "+yamlPath);
+        }
+        this.security = config.containsKey(SECURITY_CONFIG_KEY) ? (String) config.get(SECURITY_CONFIG_KEY) : ClientKt.DEFAULT_SECURITY;
+        if(!ClientKt.getSECURITY_OPTIONS().contains(this.security)){
+            throw new ConfigurationException(SECURITY_CONFIG_KEY+" must be one of: "+ ClientKt.getSECURITY_OPTIONS() +", but was: '"+this.security+"'");
         }
         this.configMap = config;
         //TODO, extra validations?
