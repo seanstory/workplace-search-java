@@ -36,10 +36,10 @@ import java.util.Iterator;
 
 /**
  * Abstract class from which all yielders extend.
- * <p/>
+ * 
  * When a sub-class implements the yieldNextCore method,
  * during runtime it will be enhanced to the following:
- * <p/>
+ * 
  * 1. All local variables within the yieldNextCore method
  * will be promoted to class member fields.
  * 2. A new member, "state" of type byte, will be added.
@@ -67,12 +67,12 @@ public abstract class Yielder<T> implements Iterable<T> {
     /**
      * Implemented by the developer to yield elements of
      * type T back to the caller.
-     * <p/>
+     * 
      * A yieldReturn call will set the next element returned
      * by the iterator's <code>next</code> call. A yieldBreak
      * call will mark that there are no more elements in the
      * iteration.
-     * <p/>
+     * 
      * If the method reaches its end without any
      * yielding, it is considered as if it had implicitly called
      * yieldBreak.
