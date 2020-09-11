@@ -13,7 +13,7 @@ To use the JVM client for Workplace Search, add:
 
 ```
             <dependency>
-                <groupId>com.sstory.workplace.search</groupId>
+                <groupId>com.seanjstory.workplace.search</groupId>
                 <artifactId>workplace-search-client</artifactId>
                 <version>7.8.0-SNAPSHOT</version>
             </dependency>
@@ -23,7 +23,7 @@ To use the JVM SDK for Custom API Sources for Workplace Search, add:
 
 ```
             <dependency>
-                <groupId>com.sstory.workplace.search</groupId>
+                <groupId>com.seanjstory.workplace.search</groupId>
                 <artifactId>workplace-search-sdk</artifactId>
                 <version>7.8.0-SNAPSHOT</version>
             </dependency>
@@ -35,7 +35,7 @@ The client requires an `accessToken`, and most of the APIs also require a `conte
 Search UI after creating a Custom API source. Using the client is as easy as:
 
 ```groovy
-import com.sstory.workplace.search.client.Client;
+import com.seanjstory.workplace.search.client.Client;
 //...
 String accessToken = "3a423c597442eddb09baad64793ff342fc0aa6da357f5227888d44b3386cf722";
 String contentSourceKey = "5e8f5266f74c321dae6e5548";
@@ -57,7 +57,7 @@ what is in the module.
 
 ```
 .
-└── com.sstory.workplace.search.sdk
+└── com.seanjstory.workplace.search.sdk
     ├── api
     │   ├── DocumentBase.java     # Abstract Class
     │   ├── Source.java           # Interface
