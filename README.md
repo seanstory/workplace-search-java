@@ -15,7 +15,7 @@ To use the JVM client for Workplace Search, add:
             <dependency>
                 <groupId>com.seanjstory.workplace.search</groupId>
                 <artifactId>workplace-search-client</artifactId>
-                <version>7.8.0-SNAPSHOT</version>
+                <version>7.9.0-SNAPSHOT</version>
             </dependency>
 ```
 
@@ -25,7 +25,7 @@ To use the JVM SDK for Custom API Sources for Workplace Search, add:
             <dependency>
                 <groupId>com.seanjstory.workplace.search</groupId>
                 <artifactId>workplace-search-sdk</artifactId>
-                <version>7.8.0-SNAPSHOT</version>
+                <version>7.9.0-SNAPSHOT</version>
             </dependency>
 ```
 
