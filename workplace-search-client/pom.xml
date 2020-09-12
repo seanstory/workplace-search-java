@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>workplace-search-client</artifactId>
+    <description>A Java Client for interacting with Elastic Workplace Search</description>
 
 
     <dependencies>

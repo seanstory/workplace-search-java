@@ -12,6 +12,22 @@
     </modules>
 
     <name>workplace-search-java</name>
+    <description>Java tools for interacting with Elastic Workplace Search</description>
+    <url>https://github.com/seanstory/workplace-search-java</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>seanstory</id>
+            <name>Sean Story</name>
+            <url>www.seanjstory.com</url>
+        </developer>
+    </developers>
 
     <properties>
         <groovy.version>2.4.16</groovy.version>
@@ -119,6 +135,14 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jcenter</id>
+            <name>JCenter</name>
+            <url>https://jcenter.bintray.com/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
@@ -270,6 +294,21 @@
                 <executions>
                     <execution>
                         <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>

@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>workplace-search-sdk</artifactId>
+    <description>A Java SDK for building Workplace Search Custom API Sources</description>
 
     <dependencies>
         <dependency>
