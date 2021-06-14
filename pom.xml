@@ -108,11 +108,11 @@
                 <artifactId>jersey-media-json-jackson</artifactId>
                 <version>${jersy.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.yaml</groupId>
-                <artifactId>snakeyaml</artifactId>
-                <version>1.21</version>
-            </dependency>
+	    <dependency>
+	      <groupId>org.yaml</groupId>
+	      <artifactId>snakeyaml</artifactId>
+	      <version>1.26</version>
+	    </dependency>
 
             <!-- test dependencies -->
             <dependency>
